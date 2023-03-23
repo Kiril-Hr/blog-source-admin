@@ -164,9 +164,6 @@ const Posts = () => {
     setOpen(true);
   };
 
-  console.log(selectedRows);
-  console.log(posts);
-
   return (
     <>
       {isPostsLoading ? (
