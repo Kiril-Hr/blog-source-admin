@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, MouseEvent } from "react";
 import Box from "@mui/material/Box";
 import {
   DataGrid,
@@ -11,9 +11,11 @@ import DeleteIcon from "@mui/icons-material/Delete";
 import EditIcon from "@mui/icons-material/Edit";
 import SyncIcon from "@mui/icons-material/Sync";
 import { useAppDispatch, useAppSelector } from "../../hooks/hooks";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Navigate } from "react-router-dom";
 import ModalConfirmWindow from "../../components/ModalConfirmWindow/ModalConfirmWindow";
 import axios from "../../axios";
+import { logout, selectIsAuth } from "../../redux/slices/auth";
+import { Button } from "@mui/material";
 
 const columns: GridColDef[] = [
   { field: "id", headerName: "PostID", width: 250 },
@@ -65,6 +67,8 @@ const Posts = () => {
   const [open, setOpen] = useState(false);
 
   const navigate = useNavigate();
+
+  const isAuth = useAppSelector(selectIsAuth);
 
   const dispatch = useAppDispatch();
 
@@ -164,8 +168,29 @@ const Posts = () => {
     setOpen(true);
   };
 
+  const handleLogOut = () => {
+    dispatch(logout());
+    window.localStorage.removeItem("token");
+    navigate("/auth");
+  };
+
+  if (!isAuth && !window.localStorage.getItem("token")) {
+    return <Navigate to="/auth" />;
+  }
+
   return (
     <>
+      <div
+        style={{
+          display: "flex",
+          justifyContent: "flex-end",
+          marginBottom: "20px",
+        }}
+      >
+        <Button variant="contained" onClick={handleLogOut}>
+          Log out
+        </Button>
+      </div>
       {isPostsLoading ? (
         "Loading..."
       ) : (

@@ -1,11 +1,13 @@
 import { useCallback, useMemo, useState, useEffect } from "react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, Navigate, useNavigate, useParams } from "react-router-dom";
 import SimpleMDE, { SimpleMDEReactProps } from "react-simplemde-editor";
 import "easymde/dist/easymde.min.css";
 import classes from "./PostEdit.module.css";
 import axios from "../../axios";
 import { BASEURL } from "../../utils/URL";
 import ModalWindow from "../../components/ModalWindow/ModalWindow";
+import { useAppSelector } from "../../hooks/hooks";
+import { selectIsAuth } from "../../redux/slices/auth";
 
 interface IData {
   text: string;
@@ -16,6 +18,8 @@ interface IData {
 }
 
 export const PostEdit = () => {
+  const isAuth = useAppSelector(selectIsAuth);
+
   const { id } = useParams();
 
   const navigate = useNavigate();
@@ -98,6 +102,10 @@ export const PostEdit = () => {
       });
     }
   }, []);
+
+  if (!isAuth && !window.localStorage.getItem("token")) {
+    return <Navigate to="/auth" />;
+  }
 
   return (
     <div className={classes.textEditor}>
