@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from "react";
-import { Button } from "@material-ui/core";
+import { Button } from "@mui/material";
 
 type Props = {
   onChange?: (e: React.ChangeEvent<HTMLTextAreaElement>) => void;
